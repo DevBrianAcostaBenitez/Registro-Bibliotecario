@@ -1,1 +1,25 @@
-<p>book-form works!</p>
+<h2>{{ editing ? 'Editar libro' : 'Crear libro' }}</h2>
+<form (ngSubmit)="saveBook()">
+  <label>
+    Imagen:
+    <input type="text" [(ngModel)]="book.image" name="image" required>
+  </label>
+  <label>
+    Nombre:
+    <input type="text" [(ngModel)]="book.name" name="name" required>
+  </label>
+  <label>
+    Editorial:
+    <input type="text" [(ngModel)]="book.editorial" name="editorial" required>
+  </label>
+  <label>
+    Género:
+    <input type="text" [(ngModel)]="book.gender" name="gender" required>
+  </label>
+  <label>
+    Autor:
+    <input type="text" [(ngModel)]="book.author" name="author" required>
+  </label>
+  <button type="submit">{{ editing ? 'Guardar cambios' : 'Crear' }}</button>
+  <button type="button" (click)="cancelEdit()">Cancelar</button>
+</form>
