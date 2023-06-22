@@ -23,3 +23,9 @@
     </td>
   </tr>
 </table>
+<app-book-form
+  *ngIf="showEditForm || showCreateForm"
+  [book]="selectedBook"
+  (save)="saveBook($event)"
+  (cancel)="cancelEdit()">
+</app-book-form>

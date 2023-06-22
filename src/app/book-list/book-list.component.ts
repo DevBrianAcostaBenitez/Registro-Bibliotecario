@@ -9,6 +9,9 @@ import { BookService } from '../book.service';
 })
 export class BookListComponent implements OnInit {
   books: Book[] = [];
+  selectedBook: Book | null = null;
+  showEditForm = false;
+  showCreateForm = false;
 
   constructor(private bookService: BookService) { }
 
@@ -23,10 +26,37 @@ export class BookListComponent implements OnInit {
   }
 
   createBook() {
+    this.selectedBook = null;
+    this.showCreateForm = true;
   }
 
   editBook(book: Book) {
+    this.selectedBook = { ...book };
+    this.showEditForm = true;
+  }
 
+  saveBook(book: Book) {
+    if (book.id !== 0) {
+      this.bookService.updateBook(book).subscribe(() => {
+        this.getBooks();
+        this.selectedBook = null;
+        this.showEditForm = false;
+        this.showCreateForm = false;
+      });
+    } else {
+      this.bookService.createBook(book).subscribe(() => {
+        this.getBooks();
+        this.selectedBook = null;
+        this.showEditForm = false;
+        this.showCreateForm = false;
+      });
+    }
+  }
+
+  cancelEdit() {
+    this.selectedBook = null;
+    this.showEditForm = false;
+    this.showCreateForm = false;
   }
 
   deleteBook(bookId: number) {

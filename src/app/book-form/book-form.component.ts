@@ -1,6 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Book } from '../book.model';
-import { BookService } from '../book.service';
 
 @Component({
   selector: 'app-book-form',
@@ -8,35 +7,52 @@ import { BookService } from '../book.service';
   styleUrls: ['./book-form.component.css']
 })
 export class BookFormComponent implements OnInit {
-  @Input() book: Book;
+  @Input() book: Book | null;
+  @Output() save = new EventEmitter<Book>();
+  @Output() cancel = new EventEmitter<void>();
   editing = false;
+  image: string | undefined;
+  name: string | undefined;
+  editorial: string | undefined;
+  gender: string | undefined;
+  author: string | undefined;
 
-  constructor(private bookService: BookService) {
-    this.book = {
-      id: 0,
-      image: '',
-      name: '',
-      editorial: '',
-      gender: '',
-      author: ''
-    };
+  constructor() {
+    this.book = null;
   }
 
   ngOnInit() {
-    this.editing = this.book.id !== 0;
+    if (this.book) {
+      this.editing = true;
+      this.image = this.book.image;
+      this.name = this.book.name;
+      this.editorial = this.book.editorial;
+      this.gender = this.book.gender;
+      this.author = this.book.author;
+    } else {
+      this.book = {
+        id: 0,
+        image: '',
+        name: '',
+        editorial: '',
+        gender: '',
+        author: ''
+      };
+    }
   }
 
   saveBook() {
-    if (this.editing) {
-      this.bookService.updateBook(this.book).subscribe(() => {
-      });
-    } else {
-      this.bookService.createBook(this.book).subscribe(() => {
-      });
+    if (this.book) {
+      this.book.image = this.image || '';
+      this.book.name = this.name || '';
+      this.book.editorial = this.editorial || '';
+      this.book.gender = this.gender || '';
+      this.book.author = this.author || '';
+      this.save.emit(this.book);
     }
   }
 
   cancelEdit() {
-   
+    this.cancel.emit();
   }
 }
